@@ -1,3 +1,4 @@
+import { useRouter } from 'expo-router';
 import React, { useEffect, useRef, useState } from 'react';
 import {
   Animated,
@@ -92,16 +93,16 @@ function SysItem({ label, status }: { label: string; status: 'ok' | 'warn' | 'cr
   );
 }
 
-function HudPanel({ label, children, style }: {
-  label: string; children: React.ReactNode; style?: object;
+function HudPanel({ label, onPress, children, style }: {
+  label: string; onPress?: () => void; children: React.ReactNode; style?: object;
 }) {
   return (
-    <View style={[s.hudPanel, style]}>
+    <TouchableOpacity activeOpacity={onPress ? 0.75 : 1} onPress={onPress} style={[s.hudPanel, style]}>
       <View style={s.panelLabelWrap}>
         <Text style={s.panelLabelTag}>{label}</Text>
       </View>
       {children}
-    </View>
+    </TouchableOpacity>
   );
 }
 
@@ -167,6 +168,7 @@ function AlertModal({ visible, alerts, onClose, onDismiss }: {
 
 export default function DashboardScreen() {
   const { mission, dismissAlert } = useMission();
+  const router = useRouter();
   const [utc, setUtc] = useState(formatUTC());
   const [alertVisible, setAlertVisible] = useState(true);
   const pulsAnim = useRef(new Animated.Value(0.4)).current;
@@ -221,7 +223,7 @@ export default function DashboardScreen() {
         </View>
 
         {/* Painel 1 — Missão geral */}
-        <HudPanel label="MISSÃO GERAL" style={s.panelFull}>
+        <HudPanel label="MISSÃO GERAL" onPress={() => router.push('/mission-details')} style={s.panelFull}>
           <PanelRow label="Destino"        value={mission.destination}  valueColor="#00ff88" />
           <PanelRow label="Status"         value="NOMINAL"              valueColor="#00ff88" />
           <PanelRow label="Dist. da Terra" value={mission.distanceFromEarth.toString()} unit=" M km" big />
@@ -230,7 +232,7 @@ export default function DashboardScreen() {
         </HudPanel>
 
         {/* Painel 2 — Telemetria */}
-        <HudPanel label="TELEMETRIA DA NAVE" style={s.panelFull}>
+        <HudPanel label="TELEMETRIA DA NAVE" onPress={() => router.push('/telemetry')} style={s.panelFull}>
           <View style={s.twoCol}>
             <View style={{ flex: 1 }}>
               <PanelRow label="Combustível" value={`${mission.fuelPercent}%`}    valueColor={percentColor(mission.fuelPercent)} />
@@ -252,7 +254,7 @@ export default function DashboardScreen() {
         </HudPanel>
 
         {/* Painel 3 — Comunicação */}
-        <HudPanel label="COMUNICAÇÃO" style={s.panelFull}>
+        <HudPanel label="COMUNICAÇÃO" onPress={() => router.push('/comms')} style={s.panelFull}>
           <PanelRow label="Latência"    value={`${mission.latencyMin} min`} valueColor="#ffb300" />
           <PanelRow label="Intensidade" value={`${mission.signalDbm} dBm`}  valueColor="#ffb300" />
           <SignalBars active={mission.signalBars} />
@@ -261,7 +263,7 @@ export default function DashboardScreen() {
         </HudPanel>
 
         {/* Painel 4 — Sistemas */}
-        <HudPanel label="SAÚDE DOS SISTEMAS" style={s.panelFull}>
+        <HudPanel label="SAÚDE DOS SISTEMAS" onPress={() => router.push('/systems')} style={s.panelFull}>
           <View style={s.sysGrid}>
             <SysItem label="Propulsão"   status={mission.systems.propulsion} />
             <SysItem label="Energia"     status={mission.systems.power} />

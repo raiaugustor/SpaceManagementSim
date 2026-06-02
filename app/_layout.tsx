@@ -12,6 +12,10 @@ export default function RootLayout() {
         }}
       >
         <Stack.Screen name="index" />
+        <Stack.Screen name="mission-details" />
+        <Stack.Screen name="telemetry" />
+        <Stack.Screen name="systems" />
+        <Stack.Screen name="comms" />
       </Stack>
     </MissionProvider>
   );
