@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
 
 export type SystemStatus = 'ok' | 'warn' | 'crit';
@@ -76,26 +77,57 @@ const INITIAL: MissionData = {
   ],
 };
 
+const STORAGE_KEY = '@space_mission_v1';
+
 interface ContextValue {
   mission:       MissionData;
   updateMission: (patch: Partial<MissionData>) => void;
   dismissAlert:  (index: number) => void;
+  loading:       boolean;
 }
 
 const MissionContext = createContext<ContextValue>({
   mission:       INITIAL,
   updateMission: () => {},
   dismissAlert:  () => {},
+  loading:       false,
 });
 
 export function MissionProvider({ children }: { children: React.ReactNode }) {
   const [mission, setMission] = useState<MissionData>(INITIAL);
+  const [loading, setLoading] = useState(true);
 
   const metRef    = useRef(INITIAL.metSeconds);
   const distRef   = useRef(INITIAL.distanceFromEarth);
   const signalRef = useRef(INITIAL.signalBars);
   const angleRef  = useRef(INITIAL.shipAngle);
 
+  // Carrega estado salvo no AsyncStorage ao iniciar
+  useEffect(() => {
+    AsyncStorage.getItem(STORAGE_KEY)
+      .then(raw => {
+        if (raw) {
+          const saved: MissionData = JSON.parse(raw);
+          setMission(saved);
+          metRef.current    = saved.metSeconds;
+          distRef.current   = saved.distanceFromEarth;
+          signalRef.current = saved.signalBars;
+          angleRef.current  = saved.shipAngle;
+        }
+      })
+      .catch(e => console.warn('AsyncStorage load error:', e))
+      .finally(() => setLoading(false));
+  }, []);
+
+  // Salva no AsyncStorage sempre que mission muda (exceto durante o carregamento)
+  useEffect(() => {
+    if (!loading) {
+      AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(mission))
+        .catch(e => console.warn('AsyncStorage save error:', e));
+    }
+  }, [mission, loading]);
+
+  // Tick de 1s — atualiza MET, distância, sinal e ângulo orbital
   useEffect(() => {
     const interval = setInterval(() => {
       metRef.current   += 1;
@@ -134,7 +166,7 @@ export function MissionProvider({ children }: { children: React.ReactNode }) {
     }));
 
   return (
-    <MissionContext.Provider value={{ mission, updateMission, dismissAlert }}>
+    <MissionContext.Provider value={{ mission, updateMission, dismissAlert, loading }}>
       {children}
     </MissionContext.Provider>
   );

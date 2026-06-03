@@ -41,3 +41,9 @@ example
 # generated native folders
 /ios
 /android
+
+# Windows
+Thumbs.db
+
+# Expo web build
+/web-build/
