@@ -280,7 +280,7 @@ export default function DashboardScreen() {
         </HudPanel>
 
         {/* Painel 5 — Órbita */}
-        <HudPanel label="ESTABILIDADE ORBITAL" style={s.panelFull}>
+        <HudPanel label="ESTABILIDADE ORBITAL" onPress={() => router.push('/orbit')} style={s.panelFull}>
           <View style={s.orbitRow}>
             <OrbitRadar angle={mission.shipAngle} />
             <View style={{ flex: 1, marginLeft: 16 }}>

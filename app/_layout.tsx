@@ -16,6 +16,7 @@ export default function RootLayout() {
         <Stack.Screen name="telemetry" />
         <Stack.Screen name="systems" />
         <Stack.Screen name="comms" />
+        <Stack.Screen name="orbit" />
       </Stack>
     </MissionProvider>
   );
