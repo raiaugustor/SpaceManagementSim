@@ -62,23 +62,8 @@ cd SpaceManagementSim
 ```bash
 npm install
 ```
- 
-**3. Instalar as fontes**
- 
-Baixar as familias tipograficas no Google Fonts:
-- Share Tech Mono: https://fonts.google.com/specimen/Share+Tech+Mono
-- Orbitron: https://fonts.google.com/specimen/Orbitron
-Colocar os arquivos `.ttf` em `assets/fonts/` com exatamente estes nomes:
- 
-```
-assets/fonts/
-├── ShareTechMono-Regular.ttf
-├── Orbitron-Regular.ttf
-├── Orbitron-SemiBold.ttf
-└── Orbitron-Bold.ttf
-```
- 
-**4. Iniciar o servidor de desenvolvimento**
+
+**3. Iniciar o servidor de desenvolvimento**
  
 Para testar no navegador:
  
@@ -94,7 +79,7 @@ npx expo run:android
 npx expo run:ios
 ```
  
-**5. Acessar o aplicativo**
+**4. Acessar o aplicativo**
  
 Com `--web`, o aplicativo abre automaticamente em `http://localhost:8081`. Use as setas de navegacao do browser ou interaja diretamente com os paineis do dashboard para navegar entre as telas.
  
@@ -119,11 +104,7 @@ Com `--web`, o aplicativo abre automaticamente em `http://localhost:8081`. Use a
 As versoes exatas de todas as dependencias estao registradas no `package-lock.json`. Ao rodar `npm install`, o ambiente sera reproduzido identicamente.
  
 ---
- 
-## Decisoes de projeto
- 
-**Por que as fontes precisam ser baixadas manualmente?**
-As fontes Orbitron e Share Tech Mono sao licenciadas pela SIL Open Font License e podem ser redistribuidas livremente, mas foram omitidas do repositorio para manter o tamanho do projeto reduzido. O `expo-font` carrega as fontes localmente a partir dos arquivos `.ttf` em `assets/fonts/`.
+
 
 ## RM dos integrantes do grupo:
 Pedro Henrique dos Santos Cardoso - 563268
